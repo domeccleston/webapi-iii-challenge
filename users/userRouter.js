@@ -1,13 +1,23 @@
 const express = require('express');
 const userDb = require('./userDb');
+const postDb = require('../posts/postDb');
 const router = express.Router();
 
 router.post('/', (req, res) => {
-
+    const newUser = req.body;
+    userDb.insert(newUser)
+        .then(user => {
+            res.status(200).json(user)
+        })
+        .catch(err => {
+            res.status(500).json(err);
+        })
 });
 
 router.post('/:id/posts', (req, res) => {
-
+    const { id } = req.params;
+    const newPost = req.body;
+    // come back to this
 });
 
 router.get('/', (req, res) => {
