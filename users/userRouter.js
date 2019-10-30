@@ -67,8 +67,8 @@ router.delete('/:id', (req, res) => {
 
 router.put('/:id', (req, res) => {
     console.log("received request to update user details")
-    const { id } = params.id;
-    userDb.update(id)
+    const { id } = req.params;
+    userDb.update(id, req.body)
         .then(user => {
             if(user) {
                 res.status(200).json(user);
