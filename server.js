@@ -5,11 +5,11 @@ const server = express();
 
 server.use(express.json());
 
-server.use('/api/users', userRouter);
-
 server.get('/', logger, (req, res) => {
-  res.send(`<h2>Let's write some middleware!</h2>`)
+  res.sendFile(__dirname + '/client/build/index.html')
 });
+
+server.use('/api/users', userRouter);
 
 // custom middleware
 
