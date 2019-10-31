@@ -14,11 +14,20 @@ router.post('/', (req, res) => {
         })
 });
 
-router.post('/:id/posts', (req, res) => {
-    const { id } = req.params;
-    const newPost = req.body;
-    // come back to this
-});
+router.post("/:id/posts",(req, res) => {
+    postDb
+      .insert({ ...req.body, user_id: req.params.id })
+      .then(data => {
+        res.status(201).json(data);
+      })
+      .catch(error => {
+        res.status(500).json({
+          message:
+            "Something went wrong adding the post to the database: " +
+            error.message
+        });
+      });
+  });
 
 router.get('/', (req, res) => {
     console.log("Reached users API")
@@ -91,15 +100,32 @@ router.put('/:id', (req, res) => {
 //custom middleware
 
 function validateUserId(req, res, next) {
-
+    const { id } = req.params;
+    if(parseInt(id) > 0) { 
+      next();
+    } else {
+      res.status(404).json({ message: 'Hub id must be valid number' });
+    }
 };
 
-function validateUser(req, res, next) {
 
+
+function validateUser(req, res, next) {
+    const { body } = req.body;
+    if(Object.keys(body.length) < 1) {
+      next();
+    } else {
+      res.status(404).json({ message: 'Request must contain a body. '})
+    }
 };
 
 function validatePost(req, res, next) {
-
+    const { body } = req.body;
+    if(Object.keys(body.length) < 1 || body === undefined) {
+      next();
+    } else {
+      res.status(404).json({ message: 'Request must contain a body. '})
+    }
 };
 
 module.exports = router;
